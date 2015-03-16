@@ -1,0 +1,206 @@
+$profile-photo-dimension: 120px;
+
+.ui-loading-indicator {
+    @extend .ui-loading-base;
+
+    padding-bottom: $baseline;
+
+    // center horizontally
+    @include margin-left(auto);
+    @include margin-right(auto);
+    width: $baseline*5;
+}
+
+.wrapper-profile {
+    min-height: 200px;
+
+    .ui-loading-indicator {
+        margin-top: 100px;
+    }
+}
+
+.profile {
+
+  i {
+      color: $gray;
+  }
+
+  .message-can-edit {
+      display: none;
+  }
+
+  .editable-toggle.mode-display:hover {
+      background-color: $m-blue-hover;
+
+      .message-can-edit {
+          display: inline-block;
+      }
+  }
+
+  .account-settings-field {
+      border: 1px dashed transparent;
+  }
+
+  .account-settings-field.mode-hidden {
+      display: none;
+  }
+
+  .account-settings-field.mode-placeholder {
+      &:hover {
+          border: 1px dashed $m-blue-d1;
+      }
+  }
+
+  .account-settings-field-icon {
+      width: $baseline;
+  }
+
+}
+
+.profile-self {
+    .wrapper-profile-field-account-privacy {
+      @include clearfix();
+      @include box-sizing(border-box);
+      margin: 0 auto 0;
+      padding: ($baseline*0.75) 0;
+      width: 100%;
+      background-color: $gray-l3;
+
+      .account-settings-field-account_privacy {
+          @extend .container;
+          border: none;
+          box-shadow: none;
+      }
+
+      .account-settings-field-title {
+          width: auto;
+          color: $base-font-color;
+          font-weight: $font-bold;
+      }
+
+      .account-settings-field-value {
+          width: auto;
+          @include margin-left($baseline/2);
+      }
+
+      .account-settings-field-message {
+          @include float(left);
+          width: 100%;
+          padding: 0px;
+          color: $base-font-color;
+      }
+  }
+}
+
+.wrapper-profile-sections {
+    @extend .container;
+}
+
+.wrapper-profile-section-one {
+
+    width: 100%;
+    display: inline-block;
+
+    .profile-photo {
+      @include float(left);
+      height: $profile-photo-dimension;
+      width: $profile-photo-dimension;
+      display: inline-block;
+      vertical-align: top;
+    }
+}
+
+.profile-section-one-fields {
+
+    float: left;
+    width: flex-grid(4, 12);
+    @include margin-left($baseline*1.5);
+
+    .account-settings-field {
+        margin-bottom: ($baseline/4);
+        @include padding-left(3px);
+    }
+
+    .account-settings-field-username {
+        margin-bottom: ($baseline*0.75);
+
+        .account-settings-field-value {
+            font-size: 1.7em;
+            font-weight: $font-bold;
+            line-height: 0.9em;
+        }
+    }
+
+    .account-settings-field-title {
+        width: 0;
+    }
+
+    .account-settings-field-value {
+        width: 200px;
+    }
+
+    select {
+        width: 100%
+    }
+
+    .account-settings-field-message {
+        float: right;
+        width: 20px;
+        margin-top: 2px;
+    }
+}
+
+.wrapper-profile-section-two {
+    width: flex-grid(8, 12);
+    margin-top: ($baseline*2);
+}
+
+.profile-section-two-fields {
+
+    .account-settings-field {
+        margin-bottom: ($baseline/2);
+        padding: ($baseline/4) ($baseline/2) ($baseline/2);
+    }
+
+    .account-settings-field-title {
+        font-size: 1.1em;
+        font-weight: $font-bold;
+        margin-bottom: ($baseline/4);
+    }
+
+    .account-settings-field-value {
+        width: 100%;
+        white-space: pre-line;
+
+        textarea {
+          width: 100%;
+          background-color: transparent;
+        }
+    }
+
+    .account-settings-field-message {
+        float: right;
+        width: auto;
+        padding-top: ($baseline/4);
+    }
+
+    .account-settings-field.mode-placeholder {
+        text-align: center;
+        padding: $baseline;
+        border: 1px dashed $base-font-color;
+
+        .account-settings-field-title {
+            margin-bottom: ($baseline/2);
+        }
+
+        .account-settings-field-value {
+            line-height: 1.3em;
+        }
+    }
+
+    .account-settings-field.mode-placeholder:hover {
+        .account-settings-field-title {
+          color: $m-blue-d1;
+        }
+    }
+}

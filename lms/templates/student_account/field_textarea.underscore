@@ -1,0 +1,15 @@
+<div class="account-settings-field-wrapper">
+
+    <div class="account-settings-field-header">
+        <label class="account-settings-field-title"><%- gettext(title) %></label>
+        <span class="account-settings-field-message"><%- message %></span>
+    </div>
+
+    <div class="account-settings-field-value"><%
+        if ( mode === 'edit') {
+        %><textarea rows="2"><%- value %></textarea><%
+        } else {
+        %><%- value %><%
+        }
+    %></div>
+</div>
