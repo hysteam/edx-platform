@@ -24,6 +24,8 @@ from django.test.utils import override_settings
 from contentstore.tests.utils import parse_json, AjaxEnabledTestClient, CourseTestCase
 from contentstore.views.component import ADVANCED_COMPONENT_TYPES
 
+from edxval.api import create_video, get_videos_for_course
+
 from xmodule.contentstore.django import contentstore
 from xmodule.contentstore.utils import restore_asset_from_trashcan, empty_asset_trashcan
 from xmodule.exceptions import InvalidVersionError
@@ -1693,6 +1695,24 @@ class RerunCourseTest(ContentStoreTestCase):
         # Verify both courses are in the course listing section
         self.assertInCourseListing(source_course_key)
         self.assertInCourseListing(destination_course_key)
+
+    def test_rerun_course_val_success(self):
+        """Verify that when rerunning a course, VAL correctly copies videos"""
+        source_course = CourseFactory.create()
+        create_video(
+            dict(
+                edx_video_id="tree-hugger",
+                courses=[source_course.id],
+                status='test',
+                duration=2,
+                encoded_videos=[]
+            )
+        )
+        destination_course_key = self.post_rerun_request(source_course.id)
+        self.verify_rerun_course(source_course.id, destination_course_key, self.destination_course_data['display_name'])
+        videos = list(get_videos_for_course(destination_course_key))
+        self.assertEqual(1, len(videos))
+        self.assertEqual("tree-hugger", videos[0]['edx_video_id'])
 
     def test_rerun_course_success(self):
         source_course = CourseFactory.create()
