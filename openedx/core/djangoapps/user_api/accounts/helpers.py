@@ -4,7 +4,7 @@ Helper functions for the accounts API.
 import hashlib
 
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage, get_storage_class
+from django.core.files.storage import get_storage_class
 
 PROFILE_IMAGE_SIZES_MAP = {
     'full': 500,
@@ -24,14 +24,14 @@ def get_profile_image_storage():
     return storage_class(base_url=(settings.PROFILE_IMAGE_DOMAIN + settings.PROFILE_IMAGE_URL_PATH))
 
 
-def get_profile_image_name(username):
+def _make_name(username):
     """
     Returns the prefix part of the filename used for all profile images.
     """
     return hashlib.md5(settings.PROFILE_IMAGE_SECRET_KEY + username).hexdigest()
 
 
-def get_profile_image_filename(name, size):
+def _get_filename(name, size):
     """
     Returns the full filename for a profile image, given the name prefix and
     size.
@@ -39,12 +39,24 @@ def get_profile_image_filename(name, size):
     return '{name}_{size}.jpg'.format(name=name, size=size)
 
 
+def _get_urls(name):
+    """
+    Returns a dict containing the urls for a complete set of profile images,
+    keyed by "friendly" name (e.g. "full", "large", "medium", "small").
+    """
+    storage = get_profile_image_storage()
+    return {
+        size_display_name: storage.url(_get_filename(name, size))
+        for size_display_name, size in PROFILE_IMAGE_SIZES_MAP.items()
+    }
+
+
 def get_profile_image_names(username):
     """
     Return a dict {size:filename} for each profile image for a given username.
     """
-    name = get_profile_image_name(username)
-    return {size: get_profile_image_filename(name, size) for size in _PROFILE_IMAGE_SIZES}
+    name = _make_name(username)
+    return {size: _get_filename(name, size) for size in _PROFILE_IMAGE_SIZES}
 
 
 def get_profile_image_urls(user):
@@ -60,17 +72,11 @@ def get_profile_image_urls(user):
     Returns:
         dictionary of {size_display_name: url} for each image.
 
-    Raises:
-        ValueError: The caller asked for an unsupported image size.
-
     """
-    if user.profile.has_profile_image:
-        name = get_profile_image_name(user.username)
-    else:
-        name = settings.PROFILE_IMAGE_DEFAULT_FILENAME
-    storage = get_profile_image_storage()
+    return _get_urls(_make_name(user.username))
 
-    return {
-        size_display_name: storage.url(get_profile_image_filename(name, size))
-        for size_display_name, size in PROFILE_IMAGE_SIZES_MAP.items()
-    }
+
+def get_default_profile_image_urls():
+    """
+    """
+    return _get_urls(settings.PROFILE_IMAGE_DEFAULT_FILENAME)
